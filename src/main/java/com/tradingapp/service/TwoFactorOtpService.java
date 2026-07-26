@@ -1,17 +1,17 @@
 package com.tradingapp.service;
 
-import com.tradingapp.modal.TwoFactorOtp;
+import com.tradingapp.modal.TwoFactorOTP;
 import com.tradingapp.modal.User;
 
 public interface TwoFactorOtpService {
 
-    TwoFactorOtp createTwoFactorOtp(User user, String otp, String jwt);
+    TwoFactorOTP createTwoFactorOtp(User user, String otp, String jwt);
 
-    TwoFactorOtp findByUser(Long userId);
+    TwoFactorOTP findByUser(Long userId);
 
-    TwoFactorOtp findById(String id);
+    TwoFactorOTP findById(String id);
 
-    boolean verifyTwoFactorOtp(TwoFactorOtp twoFactorOtp, String otp);
+    boolean verifyTwoFactorOtp(TwoFactorOTP twoFactorOtp, String otp);
 
-    void deleteTwoFactorOtp(TwoFactorOtp twoFactorOtp);
+    void deleteTwoFactorOtp(TwoFactorOTP twoFactorOtp);
 }

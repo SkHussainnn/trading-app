@@ -6,11 +6,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import lombok.Data;
-import org.springframework.boot.jackson.autoconfigure.JacksonProperties;
 
 @Entity
 @Data
-public class TwoFactorOtp {
+public class TwoFactorOTP {
 
     @Id
 
