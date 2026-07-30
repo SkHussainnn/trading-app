@@ -24,7 +24,7 @@ public class Coin {
     private String image;
 
     @JsonProperty("current_price")
-    private double current_price;
+    private double currentPrice;
 
     @JsonProperty("market_cap")
     private long marketCap;
