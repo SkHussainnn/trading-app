@@ -14,7 +14,7 @@ public class Withdrawal {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private WithdrawalStatus withdrawalStatus;
+    private WithdrawalStatus status;
 
     private Long amount;
 
