@@ -30,7 +30,7 @@ public class Order {
     private LocalDateTime timestamp=LocalDateTime.now();
 
     @Column(nullable = false)
-    private OrderStatus orderStatus;
+    private OrderStatus status;
 
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
     private OrderItem orderItem;

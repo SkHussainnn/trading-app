@@ -39,7 +39,7 @@ public class UserController {
     @GetMapping("/api/users/profile")
     public ResponseEntity<User> getUserProfile(@RequestHeader("Authorization") String jwt) throws Exception {
 
-        User user=userService.findUserProfileJwt(jwt);
+        User user=userService.findUserProfileByJwt(jwt);
 
         return new ResponseEntity<User>(user, HttpStatus.OK);
     }
@@ -49,7 +49,7 @@ public class UserController {
             @RequestHeader("Authorization") String jwt,
             @PathVariable VerificationType verificationType) throws Exception {
 
-        User user = userService.findUserProfileJwt(jwt);
+        User user = userService.findUserProfileByJwt(jwt);
 
         VerificationCode verificationCode=verificationCodeService.
                 getVerificationCodeByUser(user.getId());
@@ -70,7 +70,7 @@ public class UserController {
             @PathVariable String otp,
             @RequestHeader("Authorization") String jwt) throws Exception {
 
-        User user = userService.findUserProfileJwt(jwt);
+        User user = userService.findUserProfileByJwt(jwt);
 
         VerificationCode verificationCode=verificationCodeService.getVerificationCodeByUser(user.getId());
 

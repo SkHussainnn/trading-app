@@ -4,6 +4,7 @@ import com.tradingapp.modal.Order;
 import com.tradingapp.modal.User;
 import com.tradingapp.modal.Wallet;
 import com.tradingapp.modal.WalletTransaction;
+import com.tradingapp.service.OrderService;
 import com.tradingapp.service.UserService;
 import com.tradingapp.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,12 @@ public class WalletController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private OrderService orderService;
+
     @GetMapping("/api/wallet")
     public ResponseEntity<Wallet> getUserWallet(@RequestHeader("Authorization") String jwt) throws Exception {
-        User user=userService.findUserProfileJwt(jwt);
+        User user=userService.findUserProfileByJwt(jwt);
 
         Wallet wallet=walletService.getUserWallet(user);
 
@@ -37,7 +41,7 @@ public class WalletController {
             @PathVariable Long walletId,
             @RequestBody WalletTransaction req
             ) throws Exception {
-        User senderUser=userService.findUserProfileJwt(jwt);
+        User senderUser=userService.findUserProfileByJwt(jwt);
         Wallet receiverWallet=walletService.findWalletById(walletId);
         Wallet wallet=walletService.walletToWalletTransfer(
                 senderUser, receiverWallet,
@@ -51,7 +55,7 @@ public class WalletController {
             @RequestHeader("Authorization") String jwt,
             @PathVariable Long orderId
     ) throws Exception {
-        User user=userService.findUserProfileJwt(jwt);
+        User user=userService.findUserProfileByJwt(jwt);
 
         Order order = orderService.getOrderById(orderId);
 
