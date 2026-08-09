@@ -5,9 +5,11 @@ import com.tradingapp.modal.ForgotPasswordToken;
 import com.tradingapp.modal.User;
 import com.tradingapp.repository.ForgotPasswordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class ForgotPasswordServiceImpl implements ForgotPasswordService{
 
     @Autowired
