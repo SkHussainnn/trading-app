@@ -93,7 +93,7 @@ public class PaymentServiceImpl implements PaymentService {
 
             // // Create Json object with the customer details
             JSONObject customer = new JSONObject();
-            customer.put("name", user.getFullname());
+            customer.put("name", user.getFullName());
 
             customer.put("email", user.getEmail());
             paymentLinkRequest.put("customer", customer);

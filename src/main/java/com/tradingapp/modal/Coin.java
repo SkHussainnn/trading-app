@@ -45,25 +45,25 @@ public class Coin {
     private double low24h;
 
     @JsonProperty("price_change_24h")
-    private double priceChange24h;
+    private Double priceChange24h;
 
     @JsonProperty("price_change_percentage_24h")
-    private double priceChangePercentage24h;
+    private Double priceChangePercentage24h;
 
     @JsonProperty("market_cap_change_24h")
-    private double marketCapChange24h;
+    private Double marketCapChange24h;
 
     @JsonProperty("market_cap_change_percentage_24h")
-    private double marketCapChangePercentage24h;
+    private Double marketCapChangePercentage24h;
 
     @JsonProperty("circulating_supply")
     private long circulatingSupply;
 
     @JsonProperty("total_supply")
-    private long totalSupply;
+    private Long totalSupply;
 
     @JsonProperty("max_supply")
-    private long maxSupply;
+    private Long maxSupply;
 
     @JsonProperty("ath")
     private double ath;

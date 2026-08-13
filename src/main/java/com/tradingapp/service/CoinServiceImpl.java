@@ -97,19 +97,26 @@ public class CoinServiceImpl implements CoinService{
             coin.setSymbol(jsonNode.get("symbol").asText());
             coin.setImage(jsonNode.get("image").get("large").asText());
 
-            JsonNode marketData=jsonNode.get("market_data");
+           JsonNode marketData=jsonNode.get("market_data");
 
             coin.setCurrentPrice(marketData.get("current_price").get("usd").asDouble());
             coin.setMarketCap(marketData.get("market_cap").get("usd").asLong());
             coin.setMarketCapRank(marketData.get("market_cap_rank").asInt());
-            coin.setTotalVolume(marketData.get("total_volume ").get("usd").asLong());
+            coin.setTotalVolume(marketData.get("total_volume").get("usd").asLong());
             coin.setHigh24h(marketData.get("high_24h").get("usd").asDouble());
-            coin.setLow24h(marketData.get("low_24").get("usd").asDouble());
-            coin.setPriceChange24h(marketData.get("price_change_24h").get("usd").asDouble());
-            coin.setPriceChangePercentage24h(marketData.get("price_change_percentage_24h").get("usd").asDouble());
-            coin.setMarketCapChange24h(marketData.get("market_cap_change_24h").asLong());
-            coin.setMarketCapChangePercentage24h(marketData.get("market_cap_change_percentage_24h").asLong());
-            coin.setTotalSupply(marketData.get("total_supply").get("usd").asLong());
+            coin.setLow24h(marketData.get("low_24h").get("usd").asDouble());
+            coin.setPriceChange24h(marketData.get("price_change_24h").asDouble());
+            coin.setPriceChangePercentage24h(marketData.get("price_change_percentage_24h").asDouble());
+            coin.setMarketCapChange24h(marketData.get("market_cap_change_24h").asDouble());
+            coin.setMarketCapChangePercentage24h(marketData.get("market_cap_change_percentage_24h").asDouble());
+            coin.setTotalSupply(marketData.get("total_supply").asLong());
+            coin.setMaxSupply(marketData.get("max_supply").asLong());
+
+            JsonNode maxSupply = marketData.get("max_supply");
+
+            if (maxSupply != null && !maxSupply.isNull()) {
+                coin.setMaxSupply(maxSupply.asLong());
+            }
 
             coinRepository.save(coin);
             return response.getBody();
@@ -147,6 +154,7 @@ public class CoinServiceImpl implements CoinService{
         }
 
         catch (HttpClientErrorException | HttpServerErrorException e) {
+            System.out.println("error ---- "+e.getMessage());
             throw new Exception(e.getMessage());
         }
     }
