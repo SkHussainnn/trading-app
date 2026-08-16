@@ -8,6 +8,7 @@ import com.tradingapp.responce.AuthResponce;
 import com.tradingapp.service.CustomUserDetailsService;
 import com.tradingapp.service.EmailService;
 import com.tradingapp.service.TwoFactorOtpService;
+import com.tradingapp.service.WatchlistService;
 import com.tradingapp.utils.OtpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,6 +34,9 @@ public class AuthController {
     private TwoFactorOtpService twoFactorOtpService;
 
     @Autowired
+    private WatchlistService watchlistService;
+
+    @Autowired
     private EmailService emailService;
 
     @PostMapping("/signup")
@@ -49,6 +53,8 @@ public class AuthController {
         newUser.setFullName(user.getFullName());
 
         User savedUser = userRepository.save(newUser);
+
+        watchlistService.createWatchlist(savedUser);
 
         Authentication auth = new UsernamePasswordAuthenticationToken(
                 user.getEmail(),

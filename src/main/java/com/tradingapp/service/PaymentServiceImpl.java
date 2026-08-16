@@ -42,6 +42,7 @@ public class PaymentServiceImpl implements PaymentService {
         paymentOrder.setUser(user);
         paymentOrder.setAmount(amount);
         paymentOrder.setPaymentMethod(paymentMethod);
+        paymentOrder.setStatus(PaymentOrderStatus.PENDING);
 
         return paymentOrderRepository.save(paymentOrder);
     }
@@ -53,7 +54,11 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Boolean proceedPaymentOrder(PaymentOrder paymentOrder, String paymentId) throws RazorpayException {
+    public Boolean proceedPaymentOrder(
+            PaymentOrder paymentOrder, String paymentId) throws RazorpayException {
+        if (paymentOrder.getStatus()==null){
+            paymentOrder.setStatus(PaymentOrderStatus.PENDING);
+        }
         if (paymentOrder.getStatus().equals(PaymentOrderStatus.PENDING)){
             if (paymentOrder.getPaymentMethod().equals(PaymentMethod.RAZORPAY)){
                 RazorpayClient razorpay = new RazorpayClient(apiKey, apiSecretKey);
@@ -78,7 +83,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public PaymentResponse createRazorpayPaymentLink(User user, Long amount) throws RazorpayException {
+    public PaymentResponse createRazorpayPaymentLink(User user, Long amount, Long orderId) throws RazorpayException {
 
         Long Amount = amount*100;
 
@@ -86,19 +91,19 @@ public class PaymentServiceImpl implements PaymentService {
             // Instantiate a razorpay client with your key ID and secretKey
             RazorpayClient razorpay = new RazorpayClient(apiKey, apiSecretKey);
 
-            // Create Json object with the payment link request parameters
+            // Create json object with the payment link request parameters
             JSONObject paymentLinkRequest = new JSONObject();
             paymentLinkRequest.put("amount", amount);
             paymentLinkRequest.put("currency", "INR");
 
-            // // Create Json object with the customer details
+            // // Create json object with the customer details
             JSONObject customer = new JSONObject();
             customer.put("name", user.getFullName());
 
             customer.put("email", user.getEmail());
             paymentLinkRequest.put("customer", customer);
 
-            // Create Json object with the notification setting
+            // Create json object with the notification setting
             JSONObject notify = new JSONObject();
             notify.put("email", true);
             paymentLinkRequest.put("notify", notify);
@@ -107,7 +112,7 @@ public class PaymentServiceImpl implements PaymentService {
             paymentLinkRequest.put("reminder_enable", true);
 
             // Set the callback URL and method
-            paymentLinkRequest.put("callback_url", "http://localhost:5173/wallet");
+            paymentLinkRequest.put("callback_url", "http://localhost:5173/wallet?order_id="+orderId);
             paymentLinkRequest.put("callback_method", "get");
 
             // Create the payment link using the paymentLink.create() method
@@ -133,7 +138,7 @@ public class PaymentServiceImpl implements PaymentService {
         SessionCreateParams params = SessionCreateParams.builder()
                 .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
                 .setMode(SessionCreateParams.Mode.PAYMENT)
-                .setSuccessUrl("http://localhost:5173/wallet?order_id"+orderId)
+                .setSuccessUrl("http://localhost:5173/wallet?order_id="+orderId)
                 .setCancelUrl("http://localhost:5173/payment/cancel")
                 .addLineItem(SessionCreateParams.LineItem.builder()
                         .setQuantity(1L)
