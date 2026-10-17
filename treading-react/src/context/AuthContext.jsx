@@ -53,7 +53,10 @@ export const AuthProvider = ({ children }) => {
       return { success: false, message: res.message || "Login failed" };
     } catch (err) {
       setLoading(false);
-      const msg = err.response?.data?.message || err.message || "Failed to sign in";
+      let msg = err.response?.data?.message || err.message || "Failed to sign in";
+      if (err.message === "Network Error" || !err.response) {
+        msg = "Backend server is offline (http://localhost:5454). Please start your Java Spring Boot application, or use Demo Trader.";
+      }
       throw new Error(msg);
     }
   };
@@ -72,7 +75,11 @@ export const AuthProvider = ({ children }) => {
       throw new Error(res.message || "Verification failed");
     } catch (err) {
       setLoading(false);
-      throw err;
+      let msg = err.response?.data?.message || err.message || "Verification failed";
+      if (err.message === "Network Error" || !err.response) {
+        msg = "Backend server is offline (http://localhost:5454).";
+      }
+      throw new Error(msg);
     }
   };
 
@@ -89,7 +96,10 @@ export const AuthProvider = ({ children }) => {
       return { success: false, message: res.message };
     } catch (err) {
       setLoading(false);
-      const msg = err.response?.data?.message || err.message || "Failed to sign up";
+      let msg = err.response?.data?.message || err.message || "Failed to sign up";
+      if (err.message === "Network Error" || !err.response) {
+        msg = "Backend server is offline (http://localhost:5454). Please start your Spring Boot application, or click 'Explore in Demo Mode' below.";
+      }
       throw new Error(msg);
     }
   };

@@ -7,12 +7,13 @@ import {
   Lock,
   ShieldCheck,
   AlertCircle,
+  CheckCircle2,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { useToast } from "../../components/NotificationToast/ToastContext";
 
 const Signup = () => {
-  const { signup } = useAuth();
+  const { signup, demoLogin } = useAuth();
   const { showToast } = useToast();
   const navigate = useNavigate();
 
@@ -164,6 +165,30 @@ const Signup = () => {
           >
             {loading ? "Creating Account..." : "Create Free Account"}
           </button>
+
+          {/* Quick Demo Option */}
+          <div className="pt-2">
+            <div className="relative flex py-2 items-center">
+              <div className="flex-grow border-t border-neutral-800"></div>
+              <span className="flex-shrink mx-3 text-[11px] text-neutral-500 uppercase font-mono">
+                Instant Preview
+              </span>
+              <div className="flex-grow border-t border-neutral-800"></div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                demoLogin("ROLE_CUSTOMER");
+                showToast("Logged in as Demo Trader!", "success");
+                navigate("/");
+              }}
+              className="w-full py-2.5 px-3 rounded-xl bg-neutral-950 hover:bg-neutral-800 border border-neutral-800 text-cyan-300 font-semibold text-xs transition flex items-center justify-center gap-1.5"
+            >
+              <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400" />
+              Explore in Demo Mode (No Backend Needed)
+            </button>
+          </div>
 
           <p className="text-center text-xs text-neutral-400 pt-3">
             Already registered?{" "}

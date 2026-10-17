@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// Default to backend base URL (works directly or via Vite proxy)
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5454";
+// Default to relative path to use Vite's configured proxy (/auth, /api, /coins -> http://localhost:5454)
+const BASE_URL = import.meta.env.VITE_API_URL || "";
 
 export const apiClient = axios.create({
   baseURL: BASE_URL,
