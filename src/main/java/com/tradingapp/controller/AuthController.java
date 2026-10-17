@@ -89,7 +89,7 @@ public class AuthController {
 
         User authUser=userRepository.findByEmail(userName);
 
-        if (user.getTwoFactorAuth().isEnabled()){
+        if (authUser.getTwoFactorAuth() != null && authUser.getTwoFactorAuth().isEnabled()){
             AuthResponce res=new AuthResponce();
             res.setMessage("Two factor auth is enabled");
             res.setTwoFactorAuthEnabled(true);

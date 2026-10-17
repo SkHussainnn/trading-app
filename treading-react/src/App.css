@@ -1,0 +1,169 @@
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+#center {
+  min-height: 410px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  text-align: center;
+}
+
+.hero {
+  position: relative;
+  width: 170px;
+  height: 179px;
+  margin-bottom: 25px;
+}
+
+.hero .base {
+  position: absolute;
+  width: 170px;
+  height: 179px;
+  left: 0;
+  top: 0;
+}
+
+.hero .framework {
+  position: absolute;
+  width: 55px;
+  height: 55px;
+  left: 57px;
+  top: 50px;
+}
+
+.hero .vite {
+  position: absolute;
+  width: 55px;
+  height: 55px;
+  left: 57px;
+  top: 105px;
+}
+
+#center h1 {
+  font-size: 20px;
+  font-weight: 400;
+  margin: 0 0 12px;
+  color: #333;
+}
+
+#center p {
+  margin: 0 0 14px;
+  color: #333;
+  font-size: 14px;
+}
+
+#center code {
+  color: #333;
+  background: transparent;
+  padding: 0;
+  font-size: 14px;
+}
+
+.counter {
+  color: #333 !important;
+  background: transparent !important;
+  border: 0 !important;
+  padding: 8px 12px !important;
+  font-size: 14px !important;
+  cursor: pointer;
+  box-shadow: none !important;
+}
+
+.counter:hover {
+  color: #000 !important;
+}
+
+.ticks {
+  width: 100%;
+  height: 1px;
+  background: #e5e5e5;
+}
+
+#next-steps {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 220px;
+}
+
+#docs,
+#social {
+  padding: 40px;
+  text-align: left;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+#docs {
+  border-right: 1px solid #e5e5e5;
+}
+
+#docs h2,
+#social h2 {
+  margin: 12px 0 5px;
+  font-size: 18px;
+  font-weight: 400;
+  color: #222;
+}
+
+#docs p,
+#social p {
+  margin: 0 0 25px;
+  font-size: 14px;
+  color: #333;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+  color: #8b3dff;
+}
+
+#docs ul,
+#social ul {
+  display: flex;
+  gap: 22px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#docs a,
+#social a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #111;
+  font-size: 14px;
+}
+
+.logo,
+.button-icon {
+  width: 20px;
+  height: 20px;
+}
+
+#spacer {
+  flex: 1;
+  min-height: 100px;
+}
+
+@media (max-width: 700px) {
+  #next-steps {
+    grid-template-columns: 1fr;
+  }
+
+  #docs {
+    border-right: 0;
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+  #docs,
+  #social {
+    padding: 30px;
+  }
+}
