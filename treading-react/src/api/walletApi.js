@@ -30,6 +30,14 @@ export const walletApi = {
     return response.data;
   },
 
+  // Test / Sandbox deposit — directly credits wallet on the backend
+  testDeposit: async (amount) => {
+    const response = await apiClient.put(
+      `/api/wallet/deposit/amount/${Math.round(amount)}`
+    );
+    return response.data;
+  },
+
   // Get user's wallet transaction history
   getTransactions: async () => {
     const response = await apiClient.get("/api/transactions");

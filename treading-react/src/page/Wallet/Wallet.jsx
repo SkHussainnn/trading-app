@@ -67,20 +67,26 @@ const Wallet = () => {
         showToast("Redirecting to secure payment checkout...", "info");
         window.open(res.payment_url, "_blank");
       } else {
-        // If standalone test mode, directly credit
-        addBalanceLocal(amount);
+        // No payment URL returned — use test deposit endpoint
+        await walletApi.testDeposit(amount);
         showToast(`Deposited $${amount.toFixed(2)} USD successfully!`, "success");
         setActiveModal(null);
+        await refreshWallet();
+        await refreshTransactions();
       }
     } catch (err) {
-      // Simulate successful deposit for local sandbox testing
-      addBalanceLocal(amount);
-      showToast(`Sandbox Deposit: $${amount.toFixed(2)} USD credited!`, "success");
-      setActiveModal(null);
+      // Payment gateway failed — use test deposit endpoint as sandbox fallback
+      try {
+        await walletApi.testDeposit(amount);
+        showToast(`Sandbox Deposit: $${amount.toFixed(2)} USD credited!`, "success");
+        setActiveModal(null);
+        await refreshWallet();
+        await refreshTransactions();
+      } catch (innerErr) {
+        showToast("Deposit failed. Please try again.", "error");
+      }
     } finally {
       setDepositLoading(false);
-      refreshWallet();
-      refreshTransactions();
     }
   };
 

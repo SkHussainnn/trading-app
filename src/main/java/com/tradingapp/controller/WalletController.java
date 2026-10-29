@@ -92,4 +92,25 @@ public class WalletController {
 
         return new ResponseEntity<>(wallet, HttpStatus.ACCEPTED);
     }
+
+    /**
+     * Test / Sandbox deposit endpoint.
+     * Directly credits the wallet without requiring a real payment gateway confirmation.
+     * Usage: PUT /api/wallet/deposit/amount/{amount}
+     */
+    @PutMapping("/api/wallet/deposit/amount/{amount}")
+    public ResponseEntity<Wallet> testDeposit(
+            @RequestHeader("Authorization") String jwt,
+            @PathVariable Long amount) throws Exception {
+        User user = userService.findUserProfileByJwt(jwt);
+        Wallet wallet = walletService.getUserWallet(user);
+
+        if (wallet.getBalance() == null) {
+            wallet.setBalance(BigDecimal.ZERO);
+        }
+
+        wallet = walletService.addBalance(wallet, amount);
+
+        return new ResponseEntity<>(wallet, HttpStatus.ACCEPTED);
+    }
 }
