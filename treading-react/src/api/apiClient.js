@@ -14,9 +14,12 @@ export const apiClient = axios.create({
 // Interceptor to attach Authorization header automatically
 apiClient.interceptors.request.use(
   (config) => {
+    const isPublicRoute =
+      config.url?.startsWith("/auth/") || config.url?.startsWith("/coins");
+
     const token = localStorage.getItem("jwt");
-    if (token) {
-      // Backend JwtTokenValidator expects "Bearer <token>"
+    // Only send Authorization header for protected routes and real JWT tokens
+    if (token && !token.startsWith("demo-") && !isPublicRoute) {
       config.headers.Authorization = token.startsWith("Bearer ")
         ? token
         : `Bearer ${token}`;
@@ -31,9 +34,8 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
-      // Token expired or invalid
       console.warn("Session expired or unauthorized. Clearing credentials.");
-      // Do not force reload if testing unauthenticated routes
+      localStorage.removeItem("jwt");
     }
     return Promise.reject(error);
   }

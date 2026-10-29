@@ -16,7 +16,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.crypto.SecretKey;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class JwtTokenValidator extends OncePerRequestFilter {
@@ -26,40 +25,38 @@ public class JwtTokenValidator extends OncePerRequestFilter {
 
         String jwt = request.getHeader(JwtConstant.JWT_HEADER);
 
-        if (jwt!=null){
-            jwt=jwt.substring(7);
+        if (jwt != null && jwt.startsWith("Bearer ")) {
+            jwt = jwt.substring(7);
 
-                    try{
+            try {
+                SecretKey key = Keys.hmacShaKeyFor(JwtConstant.SECRET_KEY.getBytes());
 
-                        SecretKey key= Keys.hmacShaKeyFor(JwtConstant.SECRET_KEY.getBytes());
+                Claims claims = Jwts.parser()
+                        .setSigningKey(key)
+                        .build()
+                        .parseSignedClaims(jwt)
+                        .getPayload();
 
-                        Claims claims= Jwts.parser()
-                                .setSigningKey(key)
-                                .build()
-                                .parseSignedClaims(jwt)
-                                .getPayload();
+                String email = String.valueOf(claims.get("email"));
 
-                        String email=String.valueOf(claims.get("email"));
+                String authorities = String.valueOf(claims.get("authorities"));
 
-                        String authorities=String
-                                .valueOf(
-                                        claims.get("authorities"));
+                List<GrantedAuthority> authoritiesList = AuthorityUtils
+                        .commaSeparatedStringToAuthorityList(authorities);
 
-                        List<GrantedAuthority> authoritiesList= AuthorityUtils
-                                .commaSeparatedStringToAuthorityList(authorities);
+                Authentication auth = new UsernamePasswordAuthenticationToken(
+                        email,
+                        null,
+                        authoritiesList
+                );
 
-
-                        Authentication auth = new UsernamePasswordAuthenticationToken(
-                                email,
-                                null,
-                                authoritiesList
-                        );
-
-                        SecurityContextHolder.getContext().setAuthentication(auth);
-                    }catch (Exception e){
-                        throw new RuntimeException("invalid token...");
-                    }
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            } catch (Exception e) {
+                // Clear security context if token is invalid or expired
+                // Do NOT throw RuntimeException that crashes the entire servlet container
+                SecurityContextHolder.clearContext();
+            }
         }
-        filterChain.doFilter(request,response);
+        filterChain.doFilter(request, response);
     }
 }

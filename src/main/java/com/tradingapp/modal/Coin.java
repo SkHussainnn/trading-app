@@ -1,9 +1,10 @@
 package com.tradingapp.modal;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
+
 import java.util.Date;
 
 @Data
@@ -24,61 +25,68 @@ public class Coin {
     private String image;
 
     @JsonProperty("current_price")
-    private double currentPrice;
+    private double currentPrice = 0.0;
 
     @JsonProperty("market_cap")
-    private long marketCap;
+    private long marketCap = 0L;
 
     @JsonProperty("market_cap_rank")
-    private int marketCapRank;
+    private int marketCapRank = 0;
 
     @JsonProperty("fully_diluted_valuation")
-    private long fullyDilutedValuation;
+    private long fullyDilutedValuation = 0L;
 
+    @Column(nullable = true)
     @JsonProperty("total_volume")
-    private Long totalVolume;
+    private Long totalVolume = 0L;
 
     @JsonProperty("high_24h")
-    private double high24h;
+    private double high24h = 0.0;
 
     @JsonProperty("low_24h")
-    private double low24h;
+    private double low24h = 0.0;
 
+    @Column(nullable = true)
     @JsonProperty("price_change_24h")
-    private Double priceChange24h;
+    private Double priceChange24h = 0.0;
 
+    @Column(nullable = true)
     @JsonProperty("price_change_percentage_24h")
-    private Double priceChangePercentage24h;
+    private Double priceChangePercentage24h = 0.0;
 
+    @Column(nullable = true)
     @JsonProperty("market_cap_change_24h")
-    private Double marketCapChange24h;
+    private Double marketCapChange24h = 0.0;
 
+    @Column(nullable = true)
     @JsonProperty("market_cap_change_percentage_24h")
-    private Double marketCapChangePercentage24h;
+    private Double marketCapChangePercentage24h = 0.0;
 
     @JsonProperty("circulating_supply")
-    private long circulatingSupply;
+    private long circulatingSupply = 0L;
 
+    @Column(nullable = true)
     @JsonProperty("total_supply")
-    private Long totalSupply;
+    private Long totalSupply = 0L;
 
+    @Column(nullable = true)
     @JsonProperty("max_supply")
-    private Long maxSupply;
+    private Long maxSupply = 0L;
 
     @JsonProperty("ath")
-    private double ath;
+    private double ath = 0.0;
 
     @JsonProperty("ath_change_percentage")
-    private double athChangePercentage;
+    private double athChangePercentage = 0.0;
 
     @JsonProperty("ath_date")
     private Date athDate;
 
     @JsonProperty("atl")
-    private double atl;
+    private double atl = 0.0;
 
     @JsonProperty("atl_change_percentage")
-    private double atlChangePercentage;
+    private double atlChangePercentage = 0.0;
 
     @JsonProperty("atl_date")
     private Date atlDate;
@@ -90,4 +98,16 @@ public class Coin {
     @JsonProperty("last_updated")
     private Date lastUpdated;
 
+    @PrePersist
+    @PreUpdate
+    public void ensureNonNullFields() {
+        if (totalVolume == null) totalVolume = 0L;
+        if (priceChange24h == null) priceChange24h = 0.0;
+        if (priceChangePercentage24h == null) priceChangePercentage24h = 0.0;
+        if (marketCapChange24h == null) marketCapChange24h = 0.0;
+        if (marketCapChangePercentage24h == null) marketCapChangePercentage24h = 0.0;
+        if (totalSupply == null) totalSupply = 0L;
+        if (maxSupply == null) maxSupply = 0L;
+        if (lastUpdated == null) lastUpdated = new Date();
+    }
 }
