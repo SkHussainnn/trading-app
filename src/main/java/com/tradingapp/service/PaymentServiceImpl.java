@@ -69,6 +69,7 @@ public class PaymentServiceImpl implements PaymentService {
 
                 if (status.equals("captured")) {
                     paymentOrder.setStatus(PaymentOrderStatus.SUCCESS);
+                    paymentOrderRepository.save(paymentOrder);
                     return true;
                 }
                 paymentOrder.setStatus(PaymentOrderStatus.FAILED);
@@ -85,7 +86,8 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public PaymentResponse createRazorpayPaymentLink(User user, Long amount, Long orderId) throws RazorpayException {
 
-        Long Amount = amount*100;
+        // Razorpay requires amount in paise (multiply INR by 100)
+        Long amountInPaise = amount * 100;
 
         try {
             // Instantiate a razorpay client with your key ID and secretKey
@@ -93,13 +95,14 @@ public class PaymentServiceImpl implements PaymentService {
 
             // Create json object with the payment link request parameters
             JSONObject paymentLinkRequest = new JSONObject();
-            paymentLinkRequest.put("amount", amount);
+            paymentLinkRequest.put("amount", amountInPaise);
             paymentLinkRequest.put("currency", "INR");
+            paymentLinkRequest.put("accept_partial", false);
+            paymentLinkRequest.put("description", "NexusTrade Wallet Top-Up");
 
-            // // Create json object with the customer details
+            // Create json object with the customer details
             JSONObject customer = new JSONObject();
             customer.put("name", user.getFullName());
-
             customer.put("email", user.getEmail());
             paymentLinkRequest.put("customer", customer);
 
@@ -109,16 +112,15 @@ public class PaymentServiceImpl implements PaymentService {
             paymentLinkRequest.put("notify", notify);
 
             // Set the reminder setting
-            paymentLinkRequest.put("reminder_enable", true);
+            paymentLinkRequest.put("reminder_enable", false);
 
-            // Set the callback URL and method
-            paymentLinkRequest.put("callback_url", "http://localhost:5173/wallet?order_id="+orderId);
+            // Set the callback URL — Razorpay appends razorpay_payment_id & razorpay_payment_link_status automatically
+            paymentLinkRequest.put("callback_url", "http://localhost:5173/wallet?order_id=" + orderId);
             paymentLinkRequest.put("callback_method", "get");
 
             // Create the payment link using the paymentLink.create() method
             PaymentLink payment = razorpay.paymentLink.create(paymentLinkRequest);
 
-            String paymentLinkId = payment.get("id");
             String paymentLinkUrl = payment.get("short_url");
 
             PaymentResponse res = new PaymentResponse();
@@ -139,7 +141,7 @@ public class PaymentServiceImpl implements PaymentService {
                 .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
                 .setMode(SessionCreateParams.Mode.PAYMENT)
                 .setSuccessUrl("http://localhost:5173/wallet?order_id="+orderId)
-                .setCancelUrl("http://localhost:5173/payment/cancel")
+                .setCancelUrl("http://localhost:5173/wallet")
                 .addLineItem(SessionCreateParams.LineItem.builder()
                         .setQuantity(1L)
                         .setPriceData(SessionCreateParams.LineItem.PriceData.builder()
@@ -150,7 +152,7 @@ public class PaymentServiceImpl implements PaymentService {
                                         .PriceData
                                         .ProductData
                                         .builder()
-                                        .setName("Top up wallet")
+                                        .setName("NexusTrade Wallet Top-Up")
                                         .build()
                                 ).build()
                         ).build()
